@@ -16,7 +16,6 @@ import plotly.express as px
 import altair as alt
 from datetime import datetime
 import statistics as stats
-st.set_page_config(page_title="American Box study", layout="wide",initial_sidebar_state="collapsed")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
