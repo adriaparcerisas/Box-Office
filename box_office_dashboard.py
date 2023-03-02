@@ -17,7 +17,6 @@ import altair as alt
 from datetime import datetime
 import statistics as stats
 st.set_page_config(page_title="American Box study", layout="wide",initial_sidebar_state="collapsed")
-st.title('American Box study')
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
@@ -70,6 +69,7 @@ st.header("Gross Revenue Comparison")
 st.markdown("This section shows the percent change of gross revenue compared to the previous day.")
 gross_revenue_comparison = data[['Date', '%± YD']]
 gross_revenue_comparison['Date'] = pd.to_datetime(gross_revenue_comparison['Date'])
+gross_revenue_comparison['Date'] = gross_revenue_comparison['Date'].fillna(0)
 gross_revenue_comparison['%± YD'] = gross_revenue_comparison['%± YD'].apply(pd.to_numeric, errors='coerce')
 plt.figure(figsize=(10,5))
 plt.plot(gross_revenue_comparison['Date'], gross_revenue_comparison['%± YD'])
