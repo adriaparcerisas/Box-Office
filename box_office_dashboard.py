@@ -18,6 +18,7 @@ from datetime import datetime
 import statistics as stats
 st.set_page_config(page_title="American Box study", layout="wide",initial_sidebar_state="collapsed")
 st.title('American Box study')
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 # Load data from excel file
