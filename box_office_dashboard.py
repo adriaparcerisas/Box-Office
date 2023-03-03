@@ -39,43 +39,70 @@ st.markdown("This section shows the top grossing movies over time.")
 top_grossing_movies = data.pivot(index='Date', columns='#1 Release', values='Gross')
 top_grossing_movies = top_grossing_movies.fillna(0)
 top_grossing_movies = top_grossing_movies.apply(pd.to_numeric, errors='coerce')
-plt.figure(figsize=(10,5))
-for column in top_grossing_movies.columns:
-    plt.plot(top_grossing_movies[column])
-plt.xlabel('Date')
-plt.ylabel('Gross Revenue')
-plt.title('Top Grossing Movies Over Time')
-st.pyplot()
+top_grossing_movies = top_grossing_movies.reset_index().melt('Date', var_name='Movie', value_name='Gross')
+chart = alt.Chart(top_grossing_movies).mark_line().encode(
+    x='Date:T',
+    y=alt.Y('Gross:Q', axis=alt.Axis(format='$')),
+    color='Movie:N'
+).properties(
+    width=800,
+    height=400,
+    title='Top Grossing Movies Over Time'
+)
+st.altair_chart(chart)
 
 # Daily Gross Revenue Section
 st.header("Daily Gross Revenue")
 st.markdown("This section shows the daily gross revenue.")
 daily_gross = data[['Date', 'Gross']]
 daily_gross['Date'] = pd.to_datetime(daily_gross['Date'])
-daily_gross.set_index('Date', inplace=True)
-daily_gross = daily_gross.resample('D').sum().reset_index()
-top_grossing_movies = top_grossing_movies.fillna(0)
+daily_gross = daily_gross.groupby('Date')['Gross'].sum().reset_index()
+daily_gross['Gross'] = daily_gross['Gross'].fillna(0)
 daily_gross['Gross'] = daily_gross['Gross'].apply(pd.to_numeric, errors='coerce')
-plt.figure(figsize=(10,5))
-plt.plot(daily_gross['Date'], daily_gross['Gross'])
-plt.xlabel('Date')
-plt.ylabel('Gross Revenue')
-plt.title('Daily Gross Revenue')
-st.pyplot()
+chart = alt.Chart(daily_gross).mark_line().encode(
+    x='Date:T',
+    y=alt.Y('Gross:Q', axis=alt.Axis(format='$')),
+).properties(
+    width=800,
+    height=400,
+    title='Daily Gross Revenue'
+)
+st.altair_chart(chart)
+
 
 # Gross Revenue Comparison Section
-st.header("Gross Revenue Comparison")
-st.markdown("This section shows the percent change of gross revenue compared to the previous day.")
+st.header("Gross Revenue Comparison Year-toDate")
+st.markdown("This section shows the percent change of gross revenue compared year-to-date.")
 gross_revenue_comparison = data[['Date', '± YD']]
 gross_revenue_comparison['Date'] = pd.to_datetime(gross_revenue_comparison['Date'])
 gross_revenue_comparison['Date'] = gross_revenue_comparison['Date'].fillna(0)
 gross_revenue_comparison['± YD'] = gross_revenue_comparison['± YD'].apply(pd.to_numeric, errors='coerce')
-plt.figure(figsize=(10,5))
-plt.plot(gross_revenue_comparison['Date'], gross_revenue_comparison['± YD'])
-plt.xlabel('Date')
-plt.ylabel('% Change in Gross Revenue')
-plt.title('Gross Revenue Comparison')
-st.pyplot()
+chart = alt.Chart(gross_revenue_comparison).mark_line().encode(
+    x='Date:T',
+    y=alt.Y('± YD:Q', axis=alt.Axis(format='$')),
+).properties(
+    width=800,
+    height=400,
+    title='Gross Revenue Comparison Year-to-Date'
+)
+st.altair_chart(chart)
+
+# Gross Revenue Comparison Section 2
+st.header("Gross Revenue Last Week Comparison")
+st.markdown("This section shows the percent change of gross revenue compared to the previous week.")
+gross_revenue_comparison = data[['Date', '± YD']]
+gross_revenue_comparison['Date'] = pd.to_datetime(gross_revenue_comparison['Date'])
+gross_revenue_comparison['Date'] = gross_revenue_comparison['Date'].fillna(0)
+gross_revenue_comparison['± YD'] = gross_revenue_comparison['± YD'].apply(pd.to_numeric, errors='coerce')
+chart = alt.Chart(gross_revenue_comparison).mark_line().encode(
+    x='Date:T',
+    y=alt.Y('± YD:Q', axis=alt.Axis(format='$')),
+).properties(
+    width=800,
+    height=400,
+    title='Gross Revenue Comparison over the last week'
+)
+st.altair_chart(chart)
 
 # Add line chart of top 10 gross over time
 plt.figure(figsize=(10, 6))
