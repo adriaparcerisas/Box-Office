@@ -90,13 +90,13 @@ st.altair_chart(chart)
 # Gross Revenue Comparison Section 2
 st.header("Gross Revenue Last Week Comparison")
 st.markdown("This section shows the percent change of gross revenue compared to the previous week.")
-gross_revenue_comparison = data[['Date', '± YD']]
+gross_revenue_comparison = data[['Date', '± LW']]
 gross_revenue_comparison['Date'] = pd.to_datetime(gross_revenue_comparison['Date'])
 gross_revenue_comparison['Date'] = gross_revenue_comparison['Date'].fillna(0)
-gross_revenue_comparison['± YD'] = gross_revenue_comparison['± YD'].apply(pd.to_numeric, errors='coerce')
+gross_revenue_comparison['± LW'] = gross_revenue_comparison['± LW'].apply(pd.to_numeric, errors='coerce')
 chart = alt.Chart(gross_revenue_comparison).mark_line().encode(
     x='Date:T',
-    y=alt.Y('± YD:Q', axis=alt.Axis(format='$')),
+    y=alt.Y('± LW:Q', axis=alt.Axis(format='$')),
 ).properties(
     width=800,
     height=400,
